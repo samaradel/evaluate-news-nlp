@@ -7,7 +7,27 @@ function handleSubmit(event) {
     if (Client.checkForURL(formURL)) {
         console.log("::: Form Submitted :::")
 
-        postData('http://localhost:3000/api', { url: formURL })
+        async function postData(url, data) {
+            const requestOptions = {
+                method: 'POST',
+                credentials: 'same-origin',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url: data }),
+                redirect: 'follow'
+            };
+            const response = await fetch(url, requestOptions);
+            try {
+                const newData = response.json();
+                return newData;
+            } catch (error) {
+                console.log('error', error);
+            }
+        };
+
+        postData('http://localhost:3000/api', formURL)
 
             .then(function (res) {
                 document.getElementById('polarity').innerHTML = `Polarity: ${res.score_tag}`;
@@ -21,22 +41,5 @@ function handleSubmit(event) {
     }
 }
 
-async function postData(url, data) {
-    const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'same-origin',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    });
-    try {
-        const newData = response.json();
-        return newData;
-    } catch (error) {
-        console.log('error', error);
-    }
-};
 
 export { handleSubmit }
