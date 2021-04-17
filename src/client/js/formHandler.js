@@ -21,7 +21,7 @@ function handleSubmit(event) {
     }
 }
 
-const postData = async (url = "", data = {}) => {
+async function postData(url, data) {
     const response = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
@@ -32,7 +32,7 @@ const postData = async (url = "", data = {}) => {
         body: JSON.stringify(data)
     });
     try {
-        const newData = await response.json();
+        const newData = response.json();
         return newData;
     } catch (error) {
         console.log('error', error);
